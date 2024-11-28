@@ -12,7 +12,7 @@ const convertToObjects = (headers, values) => {
 };
 
 
-exports.readSheet = async (spreadSheetId, sheetName) => {
+exports.readSheet = async (spreadSheetId, sheetName, keyword) => {
     try {
         const auth = new google.auth.GoogleAuth({
             key: process.env.GOOGLE_APPLICATION_CREDENTIALS,
@@ -28,17 +28,18 @@ exports.readSheet = async (spreadSheetId, sheetName) => {
 
         const rows = response.data.values;
         let result = [];
+        let resultKeyword = [];
         if (rows.length) {
-            // rows.forEach((row) => console.log(row));
             const rowHeader = rows[0];
             const rowValues = rows.splice(1);
             result = convertToObjects(rowHeader, rowValues);
+            resultKeyword =  !keyword || keyword === '' ? result : result.filter(re => re['AdsSource'] === keyword);
         } else {
             console.log('Không tìm thấy dữ liệu.');
         }
         return {
             statusCode: 200,
-            data: result,
+            data: resultKeyword,
         }
     } catch (error) {
         console.error('Error:', error.errors[0].message);

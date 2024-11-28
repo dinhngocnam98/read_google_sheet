@@ -5,7 +5,7 @@ exports.readDataGGSheet = async (req, res, next) => {
     if (!reqBody.spreadSheetId || !reqBody.sheetName) {
         return res.status(400).send({"message": "Please enter a valid spread sheet id and sheet name."});
     }
-    const result = await readGGSheetService.readSheet(reqBody.spreadSheetId, reqBody.sheetName);
+    const result = await readGGSheetService.readSheet(reqBody.spreadSheetId, reqBody.sheetName, reqBody.keyword);
     if (result.statusCode !== 200) {
         return res.status(400).send({
             success: false,
